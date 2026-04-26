@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MiniYelp.API/MiniYelp.API.csproj" />
+  <Project Path="MiniYelp.Application/MiniYelp.Application.csproj" />
+  <Project Path="MiniYelp.Domain/MiniYelp.Domain.csproj" />
+  <Project Path="MiniYelp.Infrastructure/MiniYelp.Infrastructure.csproj" />
+</Solution>
