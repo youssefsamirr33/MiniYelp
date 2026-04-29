@@ -1,0 +1,329 @@
+/* restaurants-list.css - Modern styling for the global Restaurants Page */
+
+.rest-list-page {
+  font-family: 'Inter', sans-serif;
+  color: #2D3748;
+  background-color: #FDF9F1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.rest-list-container {
+  max-width: 1400px;
+  margin: 2rem auto;
+  padding: 0 4rem;
+  display: flex;
+  gap: 3rem;
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Sidebar Filters */
+.rest-list-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
+}
+
+.rest-list-sidebar h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #1A202C;
+  margin: 0 0 0.5rem 0;
+}
+
+.rest-list-sidebar p {
+  font-size: 0.875rem;
+  color: #718096;
+  margin-bottom: 2rem;
+}
+
+.rest-filter-group {
+  margin-bottom: 1.5rem;
+}
+
+.rest-filter-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4A5568;
+  margin-bottom: 0.5rem;
+}
+
+.rest-filter-input,
+.rest-filter-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  background: #F7FAFC;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: #2D3748;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.rest-filter-input:focus,
+.rest-filter-select:focus {
+  border-color: #FF8A00;
+}
+
+.rest-filter-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.rest-filter-btn {
+  background: #FF8A00;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.rest-filter-btn:hover {
+  opacity: 0.9;
+}
+
+.rest-filter-reset {
+  background: none;
+  color: #718096;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rest-filter-reset:hover {
+  background: #F7FAFC;
+  color: #2D3748;
+}
+
+/* Main Content Area */
+.rest-list-main {
+  flex: 1;
+}
+
+.rest-list-header {
+  margin-bottom: 2rem;
+}
+
+.rest-list-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #1A202C;
+  margin: 0 0 0.5rem 0;
+}
+
+.rest-list-header p {
+  color: #718096;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.rest-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+.rest-quick-search {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  background: #F7FAFC;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+}
+
+.rest-quick-search input {
+  flex: 1;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
+.rest-toolbar-select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  background: white;
+  font-size: 0.875rem;
+  color: #4A5568;
+  outline: none;
+}
+
+/* Grid & Cards */
+.rest-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.rest-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rest-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+}
+
+.rest-card-img-wrap {
+  position: relative;
+  height: 200px;
+  background: #EDF2F7;
+}
+
+.rest-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rest-card-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: white;
+  color: #2D3748;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.rest-card-rating {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #FF8A00;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rest-card-content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.rest-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  color: #1A202C;
+  margin: 0 0 0.5rem 0;
+}
+
+.rest-card-desc {
+  font-size: 0.875rem;
+  color: #718096;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rest-card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #A0AEC0;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #EDF2F7;
+}
+
+.rest-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.rest-btn-secondary {
+  flex: 1;
+  background: #F7FAFC;
+  color: #4A5568;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.rest-btn-secondary:hover {
+  background: #E2E8F0;
+}
+
+.rest-btn-primary {
+  flex: 1;
+  background: #FF8A00;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.rest-btn-primary:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 1024px) {
+  .rest-list-container {
+    flex-direction: column;
+  }
+  .rest-list-sidebar {
+    width: 100%;
+    position: static;
+  }
+}

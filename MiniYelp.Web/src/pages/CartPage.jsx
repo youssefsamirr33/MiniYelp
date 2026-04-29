@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { AppShell } from "../components/AppShell";
-import { FormField } from "../components/FormField";
-import { StatusMessage } from "../components/StatusMessage";
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { createOrder } from "../lib/restaurants";
+import "../user-pages.css";
 
 export function CartPage() {
   const auth = useAuth();
@@ -58,106 +58,97 @@ export function CartPage() {
   }
 
   return (
-    <AppShell
-      title="Review your cart and place the order."
-      subtitle="Your online ordering flow is now connected to the backend orders API."
-      accent="warm"
-      actions={<Link className="secondary-button" to="/restaurants">Continue browsing</Link>}
-    >
-      <section className="details-grid">
-        <section className="wide-card">
-          <div className="panel-heading">
-            <h2>Cart items</h2>
-            <p>{cart.itemCount} item(s) ready for checkout.</p>
-          </div>
+    <div className="user-page">
+      <Navbar showSearch={false} />
 
-          <div className="reservation-list">
+      <main className="user-container">
+        <div className="user-page-header">
+          <h1>Review your Cart</h1>
+          <p>Ready for checkout? Review your items below.</p>
+        </div>
+
+        {error && <div style={{ color: 'red', textAlign: 'center', marginBottom: '1rem' }}>{error}</div>}
+        {success && <div style={{ color: 'green', textAlign: 'center', marginBottom: '1rem' }}>{success}</div>}
+
+        <div className="user-grid">
+          <div className="user-card">
+            <h2 className="user-card-title">Cart Items</h2>
+            
             {cart.cart.items.length ? (
               cart.cart.items.map((item) => (
-                <article className="reservation-card cart-item-card" key={item.id}>
-                  <div className="cart-item-head">
-                    <strong>{item.name}</strong>
-                    <span className="rating-pill">{item.quantity} item(s)</span>
+                <div className="user-list-item" key={item.id}>
+                  <div className="user-item-header">
+                    <h3>{item.name}</h3>
+                    <span style={{ fontWeight: '600', color: '#FF8A00' }}>{(item.price * item.quantity).toFixed(2)} EGP</span>
                   </div>
-                  <span>{item.quantity} x {item.price.toFixed(2)} EGP</span>
-                  <p>{item.description}</p>
-                  <div className="quantity-row">
-                    <button
-                      className="secondary-button"
-                      type="button"
-                      onClick={() => cart.updateQuantity(item.id, item.quantity - 1)}
-                    >
-                      -
-                    </button>
-                    <strong>{item.quantity}</strong>
-                    <button
-                      className="secondary-button"
-                      type="button"
-                      onClick={() => cart.updateQuantity(item.id, item.quantity + 1)}
-                    >
-                      +
-                    </button>
+                  <p className="user-item-desc">{item.description || "Freshly prepared for you."}</p>
+                  
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.875rem', color: '#718096' }}>{item.price.toFixed(2)} EGP each</span>
+                    <div className="user-qty-controls">
+                      <button className="user-qty-btn" type="button" onClick={() => cart.updateQuantity(item.id, item.quantity - 1)}>-</button>
+                      <strong style={{ width: '20px', textAlign: 'center' }}>{item.quantity}</strong>
+                      <button className="user-qty-btn" type="button" onClick={() => cart.updateQuantity(item.id, item.quantity + 1)}>+</button>
+                    </div>
                   </div>
-                </article>
+                </div>
               ))
             ) : (
-              <div className="empty-state-panel">
-                <strong>Your cart is empty</strong>
+              <div className="user-empty-state">
+                <h3>Your cart is empty</h3>
                 <p>Add items from a restaurant menu first to start the ordering flow.</p>
+                <Link className="user-btn-secondary" to="/restaurants" style={{textDecoration: 'none', display: 'inline-block'}}>
+                  Browse Restaurants
+                </Link>
               </div>
             )}
           </div>
-        </section>
 
-        <section className="wide-card">
-          <div className="panel-heading">
-            <h2>Checkout</h2>
-            <p>{cart.cart.restaurantName || "No restaurant selected yet"}</p>
-          </div>
+          <div className="user-card" style={{ height: 'fit-content' }}>
+            <h2 className="user-card-title">Checkout</h2>
+            <p style={{fontSize: '0.875rem', color: '#718096', marginBottom: '2rem'}}>
+              {cart.cart.restaurantName ? `Ordering from: ${cart.cart.restaurantName}` : "No restaurant selected yet"}
+            </p>
 
-          <StatusMessage type="error">{error}</StatusMessage>
-          <StatusMessage type="success">{success}</StatusMessage>
+            <form onSubmit={handleCheckout}>
+              <label className="user-form-label">Delivery Address</label>
+              <input
+                type="text"
+                className="user-input"
+                value={deliveryAddress}
+                onChange={(e) => setDeliveryAddress(e.target.value)}
+                placeholder="Apartment, street, area, city"
+                required
+              />
 
-          <form className="stack-form" onSubmit={handleCheckout}>
-            <FormField
-              label="Delivery address"
-              name="deliveryAddress"
-              value={deliveryAddress}
-              onChange={(e) => setDeliveryAddress(e.target.value)}
-              placeholder="Apartment, street, area, city"
-            />
-
-            <label className="form-field">
-              <span>Order notes</span>
+              <label className="user-form-label">Order Notes</label>
               <textarea
-                className="app-textarea"
+                className="user-textarea"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Leave instructions for your order"
               />
-            </label>
 
-            <div className="checkout-summary">
-              <div className="summary-row">
-                <span>Subtotal</span>
-                <strong>{cart.subtotal.toFixed(2)} EGP</strong>
+              <div style={{ margin: '2rem 0' }}>
+                <div className="user-summary-row">
+                  <span>Branch</span>
+                  <strong>{cart.cart.branchId || "Not selected"}</strong>
+                </div>
+                <div className="user-summary-row total">
+                  <span>Subtotal</span>
+                  <strong>{cart.subtotal.toFixed(2)} EGP</strong>
+                </div>
               </div>
-              <div className="summary-row">
-                <span>Branch selected</span>
-                <strong>{cart.cart.branchId || "Not selected"}</strong>
-              </div>
-              <div className="summary-row">
-                <span>Restaurant</span>
-                <strong>{cart.cart.restaurantName || "Waiting for menu selection"}</strong>
-              </div>
-            </div>
 
-            <button className="primary-button" disabled={loading || checkoutDisabled} type="submit">
-              {loading ? "Placing order..." : "Place order"}
-            </button>
-          </form>
-        </section>
-      </section>
-    </AppShell>
+              <button className="user-btn-primary" disabled={loading || checkoutDisabled} type="submit">
+                {loading ? "Placing order..." : "Place Order"}
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   );
 }

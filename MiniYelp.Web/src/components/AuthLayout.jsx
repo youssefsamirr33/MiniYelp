@@ -1,48 +1,45 @@
 import { Link } from "react-router-dom";
+import "../auth.css";
 
-export function AuthLayout({ eyebrow, title, subtitle, children, footer, highlights = [] }) {
+export function AuthLayout({ 
+  title, 
+  subtitle, 
+  children, 
+  imageSrc, 
+  imageAlt = "Authentication Background",
+  imagePosition = "right" // "left" or "right"
+}) {
   return (
-    <div className="auth-shell auth-shell-modern">
-      <section className="auth-side-panel">
-        <div className="auth-side-content">
-          <Link className="brand-link auth-brand-link" to="/">
-            <span className="brand-mark">m</span>
-            <span className="brand-copy">
-              <strong>mini Yelp</strong>
-              <small>Dining discovery</small>
-            </span>
+    <div className="auth-modern-page">
+      <div className={`auth-modern-container ${imagePosition === 'left' ? 'image-left' : ''}`}>
+        
+        <div className="auth-modern-form-wrapper">
+          <Link className="auth-modern-brand" to="/">
+            <div className="auth-modern-brand-logo">
+              {/* Simple map pin icon placeholder */}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </div>
+            <div className="auth-modern-brand-text">Mini<span>Yelp</span></div>
           </Link>
 
-          <div className="auth-side-copy">
-            <p className="hero-eyebrow">{eyebrow}</p>
+          <div className="auth-modern-header">
             <h1>{title}</h1>
             <p>{subtitle}</p>
           </div>
 
-          <div className="auth-side-list">
-            {highlights.map((item) => (
-              <article className="auth-side-item" key={item}>
-                <span className="auth-side-bullet" />
-                <p>{item}</p>
-              </article>
-            ))}
+          <div className="auth-modern-form">
+            {children}
           </div>
         </div>
-      </section>
 
-      <section className="auth-panel auth-panel-full auth-panel-modern">
-        <div className="auth-panel-inner auth-panel-modern-inner">
-          <div className="auth-panel-header">
-            <div className="auth-copy-block">
-              <h1 className="auth-page-title">Welcome</h1>
-              <p className="auth-page-subtitle">Simple, secure access to your account.</p>
-            </div>
-          </div>
-
-          {children}
-          {footer ? <div className="auth-footer">{footer}</div> : null}
+        <div className="auth-modern-image-wrapper">
+          <img src={imageSrc} alt={imageAlt} />
         </div>
-      </section>
+
+      </div>
     </div>
   );
 }

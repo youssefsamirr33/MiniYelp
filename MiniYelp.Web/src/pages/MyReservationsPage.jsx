@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { AppShell } from "../components/AppShell";
-import { StatusMessage } from "../components/StatusMessage";
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import { getMyReservations } from "../lib/restaurants";
+import "../user-pages.css";
 
 export function MyReservationsPage() {
   const auth = useAuth();
@@ -14,19 +15,14 @@ export function MyReservationsPage() {
     getMyReservations(auth.token)
       .then(setReservations)
       .catch((err) => setError(err.message));
-  }, []);
+  }, [auth.token]);
 
   const reservationStats = useMemo(() => {
-    const pending = reservations.filter((reservation) => reservation.status === "Pending").length;
-    const confirmed = reservations.filter((reservation) => reservation.status === "Confirmed").length;
-    const completed = reservations.filter((reservation) => reservation.status === "Completed").length;
+    const pending = reservations.filter((r) => r.status === "Pending").length;
+    const confirmed = reservations.filter((r) => r.status === "Confirmed").length;
+    const completed = reservations.filter((r) => r.status === "Completed").length;
 
-    return {
-      total: reservations.length,
-      pending,
-      confirmed,
-      completed
-    };
+    return { total: reservations.length, pending, confirmed, completed };
   }, [reservations]);
 
   if (!auth.isAuthenticated) {
@@ -34,116 +30,96 @@ export function MyReservationsPage() {
   }
 
   return (
-    <AppShell
-      title="Track your reservations."
-      subtitle="Every table booking you create appears here with branch details, timing, and live status."
-      accent="editorial"
-      actions={<Link className="secondary-button" to="/restaurants">Book another table</Link>}
-    >
-      <section className="reservation-hub-grid">
-        <section className="wide-card reservation-hub-main">
-          <div className="panel-heading">
-            <h2>My reservations</h2>
-            <p>{reservationStats.total} reservation(s) in your booking history.</p>
-          </div>
+    <div className="user-page">
+      <Navbar showSearch={false} />
 
-          <div className="reservation-overview-grid">
-            <article>
-              <span>Total bookings</span>
-              <strong>{reservationStats.total}</strong>
-            </article>
-            <article>
-              <span>Pending</span>
-              <strong>{reservationStats.pending}</strong>
-            </article>
-            <article>
-              <span>Confirmed</span>
-              <strong>{reservationStats.confirmed}</strong>
-            </article>
-            <article>
-              <span>Completed</span>
-              <strong>{reservationStats.completed}</strong>
-            </article>
-          </div>
+      <main className="user-container">
+        <div className="user-page-header">
+          <h1>Track your Reservations</h1>
+          <p>Every table booking you create appears here with live status.</p>
+        </div>
 
-          <StatusMessage type="error">{error}</StatusMessage>
+        {error && <div style={{ color: 'red', textAlign: 'center', marginBottom: '1rem' }}>{error}</div>}
 
-          <div className="reservation-timeline">
-            {reservations.length ? (
-              reservations.map((reservation) => (
-                <article className="reservation-timeline-card" key={reservation.id}>
-                  <div className="reservation-timeline-rail" />
-                  <div className="reservation-timeline-content">
-                    <div className="reservation-card-header">
-                      <div>
-                        <strong>{reservation.restaurantName}</strong>
-                        <p>{reservation.branchName} - {reservation.city}</p>
-                      </div>
-                      <span className={`status-pill status-${reservation.status?.toLowerCase() || "muted"}`}>
+        <div className="user-grid">
+          <div>
+            <div className="user-stat-grid">
+              <div className="user-stat-box">
+                <span>Total</span>
+                <strong>{reservationStats.total}</strong>
+              </div>
+              <div className="user-stat-box">
+                <span>Pending</span>
+                <strong>{reservationStats.pending}</strong>
+              </div>
+              <div className="user-stat-box">
+                <span>Confirmed</span>
+                <strong style={{color: '#38A169'}}>{reservationStats.confirmed}</strong>
+              </div>
+              <div className="user-stat-box">
+                <span>Completed</span>
+                <strong style={{color: '#718096'}}>{reservationStats.completed}</strong>
+              </div>
+            </div>
+
+            <div className="user-card">
+              <h2 className="user-card-title">Booking History</h2>
+              
+              {reservations.length ? (
+                reservations.map((reservation) => (
+                  <div className="user-list-item" key={reservation.id}>
+                    <div className="user-item-header">
+                      <h3>{reservation.restaurantName}</h3>
+                      <span className={`user-badge ${reservation.status === 'Confirmed' ? 'green' : reservation.status === 'Pending' ? 'orange' : ''}`}>
                         {reservation.status}
                       </span>
                     </div>
-
-                    <div className="reservation-chip-row">
-                      <span className="budget-pill">{reservation.reservationDate}</span>
-                      <span className="budget-pill">{reservation.reservationTime}</span>
-                      <span className="budget-pill">Party of {reservation.partySize}</span>
-                    </div>
-
-                    <div className="reservation-meta-grid">
-                      <article>
-                        <span>Branch</span>
-                        <strong>{reservation.branchName}</strong>
-                      </article>
-                      <article>
-                        <span>City</span>
-                        <strong>{reservation.city}</strong>
-                      </article>
-                      <article>
-                        <span>Status</span>
-                        <strong>{reservation.status}</strong>
-                      </article>
+                    <p className="user-item-desc">{reservation.branchName} • {reservation.city}</p>
+                    
+                    <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                      <span className="user-badge" style={{background: '#F7FAFC'}}>{reservation.reservationDate}</span>
+                      <span className="user-badge" style={{background: '#F7FAFC'}}>{reservation.reservationTime}</span>
+                      <span className="user-badge" style={{background: '#F7FAFC'}}>Party of {reservation.partySize}</span>
                     </div>
                   </div>
-                </article>
-              ))
-            ) : (
-              <div className="empty-state-panel">
-                <strong>No reservations yet</strong>
-                <p>Start from a restaurant details page and reserve your first table.</p>
-              </div>
-            )}
+                ))
+              ) : (
+                <div className="user-empty-state">
+                  <h3>No reservations yet</h3>
+                  <p>Start from a restaurant details page and reserve your first table.</p>
+                  <Link className="user-btn-secondary" to="/restaurants" style={{textDecoration: 'none', display: 'inline-block'}}>
+                    Browse Restaurants
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
-        </section>
 
-        <aside className="side-stack">
-          <section className="wide-card reservation-side-card">
-            <div className="panel-heading">
-              <h2>Plan your next visit</h2>
-              <p>Use the restaurant pages to compare menus, reviews, and branch details before booking again.</p>
+          <div className="user-card" style={{ height: 'fit-content' }}>
+            <h2 className="user-card-title">Plan Next Visit</h2>
+            <p style={{fontSize: '0.875rem', color: '#718096', marginBottom: '2rem'}}>
+              Use the restaurant pages to compare menus, reviews, and branch details before booking again.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2rem' }}>
+              <div>
+                <strong style={{ fontSize: '0.875rem' }}>Browse restaurants</strong>
+                <p style={{ fontSize: '0.75rem', color: '#718096', margin: '0.25rem 0 0 0' }}>Find new places by cuisine, city, and budget.</p>
+              </div>
+              <div>
+                <strong style={{ fontSize: '0.875rem' }}>Check menu first</strong>
+                <p style={{ fontSize: '0.75rem', color: '#718096', margin: '0.25rem 0 0 0' }}>Compare food options before deciding where to reserve.</p>
+              </div>
             </div>
 
-            <div className="reservation-side-list">
-              <article>
-                <strong>Browse restaurants</strong>
-                <p>Find new places by cuisine, city, and budget.</p>
-              </article>
-              <article>
-                <strong>Check menu first</strong>
-                <p>Compare food options before deciding where to reserve.</p>
-              </article>
-              <article>
-                <strong>Keep your history</strong>
-                <p>All reservation actions stay visible in one place.</p>
-              </article>
-            </div>
-
-            <Link className="primary-button inline-button" to="/restaurants">
-              Explore restaurants
+            <Link className="user-btn-primary" to="/restaurants" style={{textDecoration: 'none', display: 'block', textAlign: 'center'}}>
+              Explore Restaurants
             </Link>
-          </section>
-        </aside>
-      </section>
-    </AppShell>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   );
 }
