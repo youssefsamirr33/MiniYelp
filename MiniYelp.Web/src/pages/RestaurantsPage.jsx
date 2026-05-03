@@ -88,6 +88,13 @@ export function RestaurantsPage() {
     <div className="rest-list-page">
       <Navbar showSearch={false} />
 
+      <section className="rest-list-hero" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=80')" }}>
+        <div className="rest-list-hero-content">
+          <h1>Discover Dining</h1>
+          <p>Find the perfect restaurant for any occasion, from casual cafes to fine dining.</p>
+        </div>
+      </section>
+
       <div className="rest-list-container">
         {/* Sidebar */}
         <aside className="rest-list-sidebar">

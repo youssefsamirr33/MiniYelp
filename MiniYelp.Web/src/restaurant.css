@@ -90,9 +90,16 @@
   background: white;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
   display: flex;
   flex-direction: column;
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rest-food-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
 }
 
 .rest-food-img-container {
@@ -302,6 +309,14 @@
   background: #F7FAFC;
   border-radius: 20px;
   padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.rest-input-box:focus-within {
+  border-color: #FF8A00;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(255,138,0,0.1);
 }
 
 .rest-input-box input {
@@ -319,7 +334,7 @@
 }
 
 .rest-post-btn {
-  background: #3182CE;
+  background: #FF8A00;
   color: white;
   border: none;
   border-radius: 16px;
@@ -327,6 +342,14 @@
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255,138,0,0.15);
+}
+
+.rest-post-btn:hover {
+  background: #E67A00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255,138,0,0.25);
 }
 
 .rest-comment-input-bottom {

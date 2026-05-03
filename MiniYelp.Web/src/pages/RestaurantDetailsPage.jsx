@@ -91,7 +91,7 @@ export function RestaurantDetailsPage() {
     <div className="restaurant-page">
       <Navbar showSearch={false} />
 
-      <section className="rest-hero" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?auto=format&fit=crop&w=1400&q=80')" }}>
+      <section className="rest-hero" style={{ backgroundImage: `url('${restaurant?.imageUrl || 'https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?auto=format&fit=crop&w=1400&q=80'}')` }}>
         <div className="rest-hero-content">
           <h1 style={{textShadow: '0 2px 4px rgba(0,0,0,0.5)'}}>{restaurant.name}</h1>
           <p style={{textShadow: '0 1px 2px rgba(0,0,0,0.5)'}}>{restaurant.description}</p>

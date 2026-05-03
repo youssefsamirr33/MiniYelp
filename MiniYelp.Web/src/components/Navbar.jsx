@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const PinIcon = () => (
@@ -57,23 +57,23 @@ export function Navbar({ showSearch = true }) {
   return (
     <nav className="home-nav-wrapper">
       <div className="home-nav-top">
-        <div className="home-nav-left" style={{ display: 'flex', alignItems: 'center', gap: '3rem' }}>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
           <Link className="home-brand" to="/">
             <div className="home-brand-logo">
               <PinIcon />
             </div>
             <div className="home-brand-text">Mini<span>Yelp</span></div>
           </Link>
-
-          <div className="home-links">
-            <Link to="/">Home</Link>
-            <Link to="/restaurants">Restaurant</Link>
-            <Link to="/my-reservations">Reservation</Link>
-            <Link to="/my-orders">Orders</Link>
-          </div>
         </div>
 
-        <div className="home-actions">
+        <div className="home-links">
+          <NavLink to="/" end>Home</NavLink>
+          <NavLink to="/restaurants">Restaurant</NavLink>
+          <NavLink to="/my-reservations">Reservation</NavLink>
+          <NavLink to="/my-orders">Orders</NavLink>
+        </div>
+
+        <div className="home-actions" style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
           {auth.isAuthenticated ? (
             <>
               <Link to="/cart" className="home-icon-btn" title="Cart">
