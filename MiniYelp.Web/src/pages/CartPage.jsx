@@ -5,6 +5,8 @@ import { Footer } from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { createOrder } from "../lib/restaurants";
+import { useRestaurantData } from "../hooks/useRestaurantData";
+import { useEffect } from "react";
 import "../user-pages.css";
 
 export function CartPage() {
@@ -17,10 +19,19 @@ export function CartPage() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { restaurant, loading: loadingRest } = useRestaurantData(cart.cart.restaurantId);
+
   const checkoutDisabled = useMemo(
     () => !cart.cart.items.length || !cart.cart.restaurantId || !cart.cart.branchId,
     [cart.cart]
   );
+
+  // Auto-select first branch if none selected and data is available
+  useEffect(() => {
+    if (restaurant?.branches?.length && !cart.cart.branchId) {
+      cart.setBranch(restaurant.branches[0].id);
+    }
+  }, [restaurant, cart.cart.branchId, cart]);
 
   if (!auth.isAuthenticated) {
     return <Navigate to="/auth/login" replace />;
@@ -130,9 +141,24 @@ export function CartPage() {
               />
 
               <div style={{ margin: '2rem 0' }}>
-                <div className="user-summary-row">
-                  <span>Branch</span>
-                  <strong>{cart.cart.branchId || "Not selected"}</strong>
+                <div className="user-summary-row" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
+                  <span>Select Branch</span>
+                  {restaurant?.branches?.length ? (
+                    <select 
+                      className="user-input" 
+                      style={{ marginBottom: 0 }}
+                      value={cart.cart.branchId || ""} 
+                      onChange={(e) => cart.setBranch(Number(e.target.value))}
+                      required
+                    >
+                      <option value="" disabled>Choose a branch</option>
+                      {restaurant.branches.map(b => (
+                        <option key={b.id} value={b.id}>{b.branchName} - {b.city}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <strong>{loadingRest ? "Loading branches..." : "No branches found"}</strong>
+                  )}
                 </div>
                 <div className="user-summary-row total">
                   <span>Subtotal</span>

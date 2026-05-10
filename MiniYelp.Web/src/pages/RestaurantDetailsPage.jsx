@@ -4,6 +4,7 @@ import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import { getRestaurantById, getRestaurantMenu, getRestaurantReviews, createReview } from "../lib/restaurants";
+import { useCart } from "../context/CartContext";
 import "../home.css";
 import "../restaurant.css";
 
@@ -37,6 +38,9 @@ export function RestaurantDetailsPage() {
   const [commentText, setCommentText] = useState("");
   const [rating, setRating] = useState(5);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [success, setSuccess] = useState("");
+
+  const cart = useCart();
 
   useEffect(() => {
     Promise.all([
@@ -73,6 +77,25 @@ export function RestaurantDetailsPage() {
     }
   };
 
+  const handleAddToCart = (item) => {
+    if (!restaurant) return;
+
+    cart.addItem({
+      restaurantId: restaurant.id,
+      restaurantName: restaurant.name,
+      branchId: restaurant.branches?.[0]?.id,
+      item: {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        price: item.price
+      }
+    });
+
+    setSuccess(`${item.name} added to cart.`);
+    setTimeout(() => setSuccess(""), 3000);
+  };
+
   if (loading) return <div className="restaurant-page"><Navbar showSearch={false} /><p style={{textAlign:'center', marginTop:'4rem'}}>Loading...</p></div>;
   if (!restaurant) return <div className="restaurant-page"><Navbar showSearch={false} /><p style={{textAlign:'center', marginTop:'4rem'}}>Restaurant not found.</p></div>;
 
@@ -101,6 +124,7 @@ export function RestaurantDetailsPage() {
 
       <section className="rest-foods">
         <h2 className="rest-section-title">Explore Our Foods</h2>
+        {success && <div style={{ color: 'green', textAlign: 'center', marginBottom: '1.5rem', fontWeight: '600' }}>{success}</div>}
         <div className="rest-grid">
           {menu.length > 0 ? menu.flatMap(section => section.items).filter(Boolean).map((item, index) => (
             <div className="rest-food-card" key={item.id}>
@@ -116,9 +140,18 @@ export function RestaurantDetailsPage() {
               <div className="rest-food-info">
                 <div className="rest-food-header">
                   <h4 style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '140px' }}>{item.name}</h4>
-                  <span style={{fontWeight:'bold', color:'#FF8A00'}}>${item.price?.toFixed(2)}</span>
+                  <span style={{fontWeight:'bold', color:'#FF8A00'}}>{item.price?.toFixed(2)} EGP</span>
                 </div>
-                <p className="rest-food-desc" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.description}</p>
+                <p className="rest-food-desc" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: '1rem' }}>{item.description}</p>
+                
+                <button 
+                  className="user-btn-primary" 
+                  style={{ width: '100%', padding: '0.625rem', fontSize: '0.875rem' }}
+                  disabled={!item.isAvailable}
+                  onClick={() => handleAddToCart(item)}
+                >
+                  {item.isAvailable ? "Add to cart" : "Unavailable"}
+                </button>
               </div>
             </div>
           )) : <p style={{gridColumn:'1/-1', textAlign:'center'}}>No menu items found.</p>}
